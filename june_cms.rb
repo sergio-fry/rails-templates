@@ -4,21 +4,20 @@ require 'active_support'
 load_template "http://github.com/sergio-fry/rails-templates/raw/master/base.rb"
 
 linode1 = "109.74.197.134"
-application_name = ask("What is application name?")
+application_name = ask("What is application name?").underscore
 git_repo = "ssh://git@#{linode1}/home/git/#{application_name}.git"
 admin_password = ActiveSupport::SecureRandom.base64(12)
 manager_password = ActiveSupport::SecureRandom.base64(12)
 
 
-run "rm public/images/rails.png"
-run "rm public/index.html"
-run "rm public/javascripts/controls.js"
-run "rm public/javascripts/dragdrop.js"
-run "rm public/javascripts/effect.js"
-run "rm public/javascripts/prototype.js"
-git :add =>"public"
+run "git rm public/images/rails.png"
+run "git rm public/index.html"
+run "git rm public/javascripts/controls.js"
+run "git rm public/javascripts/dragdrop.js"
+run "git rm public/javascripts/effect.js"
+run "git rm public/javascripts/prototype.js"
 
-run "echo #{application_name.classify}' > README"
+run "echo '==#{application_name.classify} Appliction' > README"
 
 file ".gitignore", <<-END
 db/*.sqlite3
