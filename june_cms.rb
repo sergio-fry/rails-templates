@@ -14,7 +14,7 @@ run "git rm public/images/rails.png"
 run "git rm public/index.html"
 run "git rm public/javascripts/controls.js"
 run "git rm public/javascripts/dragdrop.js"
-run "git rm public/javascripts/effect.js"
+run "git rm public/javascripts/effects.js"
 run "git rm public/javascripts/prototype.js"
 
 run "echo '==#{application_name.classify} Appliction' > README"
@@ -75,7 +75,10 @@ END
 
 # Plugins
 plugin "fantom_controls", :git => "git@github.com:sergio-fry/fantom_controls.git", :submodule => true
+arun "ruby script/runner vendor/plugins/fantom_controls/install.rb
+
 plugin "Simple-nicEdit", :git => "git@github.com:sergio-fry/Simple-nicEdit.git", :submodule => true
+run "ruby script/runner vendor/plugins/Simple-nicEdit/install.rb
 
 
 # Seed
