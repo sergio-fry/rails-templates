@@ -75,7 +75,7 @@ END
 
 # Plugins
 plugin "fantom_controls", :git => "git@github.com:sergio-fry/fantom_controls.git", :submodule => true
-arun "ruby script/runner vendor/plugins/fantom_controls/install.rb"
+run "ruby script/runner vendor/plugins/fantom_controls/install.rb"
 
 plugin "Simple-nicEdit", :git => "git@github.com:sergio-fry/Simple-nicEdit.git", :submodule => true
 run "ruby script/runner vendor/plugins/Simple-nicEdit/install.rb"
