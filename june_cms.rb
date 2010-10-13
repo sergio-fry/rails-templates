@@ -23,9 +23,8 @@ rake "db:migrate"
 rake "june_cms:restore_content_unit_templates"
 
 
-generate :controller, "Welcome index"
-
 # Routing
+generate :controller, "Welcome index"
 file "config/routes.rb", <<-END
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => :welcome
@@ -38,3 +37,40 @@ END
 plugin "fantom_controls", :git => "git@github.com:sergio-fry/fantom_controls.git", :submodule => true
 plugin "Simple-nicEdit", :git => "git@github.com:sergio-fry/Simple-nicEdit.git", :submodule => true
 
+
+# Seed
+admin_password = ask("What is admin password?")
+manager_password = ask("What is manager password?")
+
+file "db/seed.rb", <<-END
+case RAILS_ENV
+when "development"
+  User.create!({
+    :username => "admin", 
+    :password => "secret", 
+    :password_confirmation => "secret", 
+    :email => "sergei.udalov@gmail.com", 
+    :roles => ["admin", "manager"]
+  }) unless User.find_by_username("admin")
+when "production"
+  User.create!({
+    :username => "admin", 
+    :password => "#{admin_password}", 
+    :password_confirmation => "#{admin_password}", 
+    :email => "sergei.udalov@gmail.com", 
+    :roles => ["admin", "manager"]
+  }) unless User.find_by_username("admin")
+
+  User.create!({
+    :username => "manager", 
+    :password => "#{manager_password}", 
+    :password_confirmation => "#{manager_password}", 
+    :email => "rgaifullin@gmail.com", 
+    :roles => ["manager"]
+  }) unless User.find_by_username("manager")
+end
+END
+
+rake "db:seed"
+
+git :add => ".", :commit => "-m 'JuneCMS base applicaition installed'"
