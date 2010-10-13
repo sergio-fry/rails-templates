@@ -6,6 +6,7 @@ run "rm public/javascripts/controls.js"
 run "rm public/javascripts/dragdrop.js"
 run "rm public/javascripts/effect.js"
 run "rm public/javascripts/prototype.js"
+git :add =>"public"
 
 run "echo 'New JuneCMS Application' > README"
 
@@ -32,8 +33,8 @@ file "app/views/layouts/application.html.erb", <<-END
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title><%= h(yield(:title) || "Untitled") %></title>
-    <%= stylesheet_link_tag jun_cms_stylesheets, 'application' %>
-    <%= javascript_include_tag jun_cms_javascripts, 'application' %>
+    <%= stylesheet_link_tag june_cms_stylesheets, 'application' %>
+    <%= javascript_include_tag june_cms_javascripts, 'application' %>
     <%= yield(:head) %>
   </head>
   <body>
