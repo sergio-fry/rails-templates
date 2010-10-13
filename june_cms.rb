@@ -1,4 +1,13 @@
+require 'rubygems'
+require 'active_support'
+
 load_template "http://github.com/sergio-fry/rails-templates/raw/master/base.rb"
+
+linode1 = "109.74.197.134"
+application_name = ask("What is application name?")
+admin_password = ActiveSupport::SecureRandom.base64(12)
+manager_password = ActiveSupport::SecureRandom.base64(12)
+
 
 run "rm public/images/rails.png"
 run "rm public/index.html"
@@ -8,7 +17,7 @@ run "rm public/javascripts/effect.js"
 run "rm public/javascripts/prototype.js"
 git :add =>"public"
 
-run "echo 'New JuneCMS Application' > README"
+run "echo #{application_name.classify}' > README"
 
 file ".gitignore", <<-END
 db/*.sqlite3
@@ -19,7 +28,7 @@ tmp/**/*
 END
 
 # JuneCMS
-git :submodule => "add ssh://git@linode1/home/git/june-cms.git vendor/plugins/june-cms"
+git :submodule => "add ssh://git@#{linode1}/home/git/june-cms.git vendor/plugins/june-cms"
 run "git submodule update --recursive"
 rake "june_cms:sync"
 rake "june_cms:add_migration"
@@ -103,6 +112,74 @@ end
 END
 
 rake "db:seed"
+
+# Capistrano
+run "capify ."
+file "config/deploy.rb", <<-EOF
+set :application, "#{application_name}"
+set :repository,  "ssh://git@#{linode1}/home/git/kasumi.git"
+set :server_ip,  "#{linode1}"
+
+set :scm, :git
+#set :scm_verbose, true # for old git verions
+set :git_enable_submodules, 1
+#set :deploy_via, :remote_cache
+set :branch, "master"
+
+# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+
+role :web, server_ip                          # Your HTTP server, Apache/etc
+role :app, server_ip                          # This may be the same as your `Web` server
+role :db, server_ip, :primary => true
+
+set :deploy_to, "/home/railsapp/apps/\#{application}"
+set :user, 'railsapp'
+set :use_sudo, false
+ssh_options[:keys] = ["\#{ENV['HOME']}/.ssh/id_rsa"] #Obviously needed
+ssh_options[:forward_agent] = true  #Ah hah.. Success!
+
+
+# If you are using Passenger mod_rails uncomment this:
+# if you're still using the script/reapear helper you will need
+# these http://github.com/rails/irs_process_scripts
+after "deploy", "deploy:custom_symlinks"
+after "deploy", "deploy:cleanup"
+after "deploy", "deploy:seed"
+after "deploy:setup", "deploy:custom_dirs"
+
+namespace :deploy do
+  task :start do
+  end
+  task :stop do
+  end
+
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "\#{try_sudo} touch \#{File.join(current_path,'tmp','restart.txt')}"
+  end
+
+  task :custom_symlinks do
+    run "ln -sf \#{shared_path}/db/production.sqlite3 \#{current_path}/db/production.sqlite3"
+    run "ln -sf \#{shared_path}/dragonfly_cache \#{current_path}/tmp/dragonfly"
+  end
+
+  task :custom_dirs do
+    run "mkdir -p \#{shared_path}/db"
+    run "mkdir -p \#{shared_path}/dragonfly_cache"
+  end
+
+  task :seed do
+    run "cd \#{current_path} && rake RAILS_ENV=production db:seed"
+  end
+
+  task :update_templates do
+    run "cd \#{current_path} && rake RAILS_ENV=production june_cms:restore_content_unit_templates"
+  end
+
+  task :update_unit_types do
+    run "cd \#{current_path} && rake RAILS_ENV=production june_cms:update_types"
+  end
+end
+EOF
 
 
 
