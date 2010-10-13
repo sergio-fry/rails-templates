@@ -5,6 +5,7 @@ load_template "http://github.com/sergio-fry/rails-templates/raw/master/base.rb"
 
 linode1 = "109.74.197.134"
 application_name = ask("What is application name?")
+git_repo = "ssh://git@#{linode1}/home/git/#{application_name}.git"
 admin_password = ActiveSupport::SecureRandom.base64(12)
 manager_password = ActiveSupport::SecureRandom.base64(12)
 
@@ -79,8 +80,6 @@ plugin "Simple-nicEdit", :git => "git@github.com:sergio-fry/Simple-nicEdit.git",
 
 
 # Seed
-admin_password = ask("What is admin password?")
-manager_password = ask("What is manager password?")
 
 file "db/seeds.rb", <<-END
 case RAILS_ENV
@@ -117,7 +116,7 @@ rake "db:seed"
 run "capify ."
 file "config/deploy.rb", <<-EOF
 set :application, "#{application_name}"
-set :repository,  "ssh://git@#{linode1}/home/git/kasumi.git"
+set :repository,  "#{git_repo}"
 set :server_ip,  "#{linode1}"
 
 set :scm, :git
@@ -184,3 +183,4 @@ EOF
 
 
 git :add => ".", :commit => "-m 'JuneCMS base applicaition installed'"
+git :remote =>"add origin #{git_repo}"
