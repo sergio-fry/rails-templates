@@ -74,6 +74,10 @@ end
 END
 
 # Plugins
+plugin "jrails", :git => "git://github.com/aaronchi/jrails.git"
+run "rm public/javascripts/jquery.js"
+run "rm public/javascripts/jquery-ui.js"
+
 git :submodule => "add git@github.com:sergio-fry/fantom_controls.git vendor/plugins/fantom_controls"
 run "git submodule update --recursive"
 run "ruby script/runner vendor/plugins/fantom_controls/install.rb"
@@ -147,7 +151,6 @@ ssh_options[:forward_agent] = true  #Ah hah.. Success!
 # these http://github.com/rails/irs_process_scripts
 after "deploy", "deploy:custom_symlinks"
 after "deploy", "deploy:cleanup"
-after "deploy", "deploy:seed"
 after "deploy:setup", "deploy:custom_dirs"
 
 namespace :deploy do
