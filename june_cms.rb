@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'active_support'
 
-load_template "http://github.com/sergio-fry/rails-templates/raw/master/base.rb"
+load_template "https://github.com/sergio-fry/rails-templates/raw/master/base.rb"
 
 linode1 = "109.74.197.134"
 application_name = ask("What is application name?").underscore
