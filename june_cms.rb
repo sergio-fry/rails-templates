@@ -41,21 +41,17 @@ file "app/views/layouts/application.html.erb", <<-END
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title><%= h(yield(:title) || "Untitled") %></title>
+    <title><%= @meta_title.blank? ? @site_configuration.try(:meta_title) : @meta_title %></title>
+    <meta name="keywords" content="<%= @meta_keywords.blank? ? @site_configuration.try(:meta_keywords) : @meta_keywords %>" />
+    <meta name="description" content="<%= @meta_description.blank? ? @site_configuration.try(:meta_description) : @meta_description %>" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
     <%= stylesheet_link_tag june_cms_stylesheets, 'application' %>
     <%= javascript_include_tag june_cms_javascripts, 'application' %>
     <%= yield(:head) %>
   </head>
   <body>
     <div id="container">
-      <%- flash.each do |name, msg| -%>
-        <%= content_tag :div, msg, :id => "flash_\#{name}" %>
-      <%- end -%>
-      
-      <%- if show_title? -%>
-        <h1><%=h yield(:title) %></h1>
-      <%- end -%>
-      
       <%= yield %>
     </div>
   </body>
@@ -74,9 +70,9 @@ end
 END
 
 # Plugins
-plugin "jrails", :git => "git://github.com/aaronchi/jrails.git"
-run "rm public/javascripts/jquery.js"
-run "rm public/javascripts/jquery-ui.js"
+git :submodule => "add git://github.com/aaronchi/jrails.git vendor/plugins/jrails"
+rake "jrails:js:scrub"
+rake "jrails:js:install"
 
 git :submodule => "add git@github.com:sergio-fry/fantom_controls.git vendor/plugins/fantom_controls"
 run "git submodule update --recursive"
