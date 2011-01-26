@@ -17,7 +17,7 @@ run "git rm public/javascripts/dragdrop.js"
 run "git rm public/javascripts/effects.js"
 run "git rm public/javascripts/prototype.js"
 
-run "echo '==#{application_name.classify} Appliction' > README"
+run "echo '==#{application_name.camelize} Appliction' > README"
 
 file ".gitignore", <<-END
 db/*.sqlite3
