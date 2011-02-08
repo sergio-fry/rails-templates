@@ -8,7 +8,7 @@ application_name = ask("What is application name?").underscore
 git_repo = "ssh://git@#{linode1}/home/git/#{application_name}.git"
 admin_password = ActiveSupport::SecureRandom.base64(12)
 manager_password = ActiveSupport::SecureRandom.base64(12)
-
+username_postfixes = ["warthog", "hedgehog", "badger", "drake", "eft", "fawn", "gibbon"]
 
 run "git rm public/images/rails.png"
 run "git rm public/index.html"
@@ -97,7 +97,7 @@ when "development"
   }) unless User.find_by_username("admin")
 when "production"
   User.create!({
-    :username => "admin", 
+    :username => "admin_#{username_postfixes.rand}", 
     :password => "#{admin_password}", 
     :password_confirmation => "#{admin_password}", 
     :email => "sergei.udalov@gmail.com", 
@@ -105,7 +105,7 @@ when "production"
   }) unless User.find_by_username("admin")
 
   User.create!({
-    :username => "manager", 
+    :username => "manager_#{username_postfixes.rand}", 
     :password => "#{manager_password}", 
     :password_confirmation => "#{manager_password}", 
     :email => "rgaifullin@gmail.com", 
