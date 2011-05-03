@@ -1,5 +1,8 @@
 apply "https://github.com/sergio-fry/rails-templates/raw/master/base.rb"
 
+########################################################################### 
+# http://www.rubyinside.com/how-to-rails-3-and-rspec-2-4336.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+RubyInside+%28Ruby+Inside%29
+
 gemfile_lines = <<-Gemfile
 group :development, :test do
   gem 'rspec-rails'
@@ -19,7 +22,7 @@ run 'rm -rf test'
 generate "rspec:install"
 
 
-file ".watchr", <<WATCHR
+file ".watchr", <<-WATCHR
 def run_spec(file)
   unless File.exist?(file)
     puts "\#{file} does not exist"
