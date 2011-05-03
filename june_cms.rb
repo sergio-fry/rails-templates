@@ -41,10 +41,10 @@ file "app/views/layouts/application.html.erb", <<-END
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title><%= @meta_title.blank? ? @site_configuration.try(:meta_title) : @meta_title %></title>
     <meta name="keywords" content="<%= @meta_keywords.blank? ? @site_configuration.try(:meta_keywords) : @meta_keywords %>" />
     <meta name="description" content="<%= @meta_description.blank? ? @site_configuration.try(:meta_description) : @meta_description %>" />
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
     <%= stylesheet_link_tag june_cms_stylesheets, 'application' %>
     <%= javascript_include_tag june_cms_javascripts, 'application' %>
