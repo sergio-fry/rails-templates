@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'active_support'
 
-load_template "https://github.com/sergio-fry/rails-templates/raw/master/base.rb"
+load_template "https://github.com/sergio-fry/rails-templates/raw/rails2/base.rb"
 
 linode1 = "109.74.197.134"
 application_name = ask("What is application name?").underscore
@@ -176,6 +176,10 @@ end
 EOF
 
 
+# .rvmrc
+file ".rvmrc", <<-EOF
+rvm ree-1.8.7-2011.03@rails2
+EOF
 
 git :add => ".", :commit => "-m 'JuneCMS base applicaition installed'"
 git :remote =>"add origin #{git_repo}"
