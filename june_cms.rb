@@ -183,3 +183,5 @@ EOF
 
 git :add => ".", :commit => "-m 'JuneCMS base applicaition installed'"
 git :remote =>"add origin #{git_repo}"
+
+git :checkout => " -b development"
