@@ -6,6 +6,7 @@ load_template "https://github.com/sergio-fry/rails-templates/raw/rails2/base.rb"
 linode1 = "109.74.197.134"
 application_name = ask("What is application name?").underscore
 git_repo = "ssh://git@#{linode1}/home/git/#{application_name}.git"
+admin_password = ActiveSupport::SecureRandom.base64(12)
 manager_password = ActiveSupport::SecureRandom.base64(12)
 
 
@@ -96,6 +97,13 @@ when "development"
     :roles => ["admin", "manager"]
   }) unless User.find_by_username("admin")
 when "production"
+  User.create!({
+    :username => "admin",
+    :password => "#{admin_password}",
+    :password_confirmation => "#{admin_password}",
+    :email => "sergei.udalov@gmail.com",
+    :roles => ["admin", "manager"]
+  }) unless User.find_by_username("admin")
   User.create!({
     :username => "manager",
     :password => "#{manager_password}",
